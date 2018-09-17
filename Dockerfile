@@ -1,17 +1,34 @@
-FROM debian:jessie
-MAINTAINER Ragnar B. Johannsson <ragnar@igo.is>
+FROM debian:stretch-slim
+MAINTAINER Oleg Dolya <oleg.dolya@gmail.com>
 
 RUN sed -i 's/$/ contrib non-free/' /etc/apt/sources.list && apt-get update
 
+WORKDIR /root
+RUN mkdir -p /root/bin
+
+VOLUME /mnt
+VOLUME /root/bin
+
 # Convenience
 RUN apt-get install -y --no-install-recommends \
-        file     \
-        git      \
-        less     \
-        man-db   \
-        manpages \
-        vim      \
-        zsh
+        file                       \
+        git                        \
+        less                       \
+        man-db                     \
+        manpages                   \
+        vim                        \
+        mc                         \
+        tmux                       \
+        bzip2                      \
+        apt-transport-https        \
+        gnupg2                     \
+        software-properties-common \
+        apt-utils                  \
+        zsh                        \
+        # openssh-server             \
+        openssh-client             \
+        locales-all                \
+        && apt-get -y autoremove && apt-get -y autoclean
 
 # Generic
 RUN apt-get install -y --no-install-recommends \
@@ -20,14 +37,16 @@ RUN apt-get install -y --no-install-recommends \
         htop    \
         ltrace  \
         strace  \
-        sysstat
+        sysstat \
+        && apt-get -y autoremove && apt-get -y autoclean
 
 # IO
 RUN apt-get install -y --no-install-recommends \
         blktrace \
         iotop    \
         iozone3  \
-        lsof
+        lsof     \
+        && apt-get -y autoremove && apt-get -y autoclean
 
 # Networking
 RUN apt-get install -y --no-install-recommends \
@@ -35,6 +54,7 @@ RUN apt-get install -y --no-install-recommends \
         bridge-utils    \
         ca-certificates \
         curl            \
+        wget            \
         ethtool         \
         iftop           \
         iperf           \
@@ -43,34 +63,44 @@ RUN apt-get install -y --no-install-recommends \
         net-tools       \
         nicstat         \
         nmap            \
-        tcpdump
+        tcpdump         \
+        dnsutils        \
+        dnstop          \
+        dnstracer       \
+        && apt-get -y autoremove && apt-get -y autoclean
 
 # Sysdig
-RUN curl -s https://s3.amazonaws.com/download.draios.com/DRAIOS-GPG-KEY.public \
-        | apt-key add - \
-    && curl -s http://download.draios.com/stable/deb/draios.list \
-        > /etc/apt/sources.list.d/draios.list \
-    && curl -s http://download.draios.com/apt-draios-priority \
-        > /etc/apt/preferences.d/apt-draios-priority \
-    && apt-get update \
-    && apt-get install -y --no-install-recommends \
-        gcc     \
-        gcc-4.8 \
-        sysdig  \
-    && ln -s /media/root/lib/modules /lib/modules
+# RUN curl -sS https://s3.amazonaws.com/download.draios.com/DRAIOS-GPG-KEY.public | apt-key add - \
+#     && curl -s http://download.draios.com/stable/deb/draios.list \
+#         > /etc/apt/sources.list.d/draios.list \
+#     && curl -s http://download.draios.com/apt-draios-priority \
+#         > /etc/apt/preferences.d/apt-draios-priority \
+#     && apt-get update \
+#     && apt-get install -y --no-install-recommends \
+#         gcc     \
+#         sysdig  \
+#         libssl-dev \
+#         libcap2-bin \
+#         g++ \
+#         make \
+#     && ln -s /media/root/lib/modules /lib/modules \
+#     && apt-get -y autoremove && apt-get -y autoclean
 
-# Docker
-RUN echo "deb https://get.docker.com/ubuntu docker main" \
-        > /etc/apt/sources.list.d/docker.list \
-    && apt-key adv --keyserver hkp://pgp.mit.edu \
-        --recv-keys 36A1D7869245C8950F966E92D8576A8BA88D21E9 \
-    && apt-get install -y --no-install-recommends apt-transport-https \
-    && apt-get update \
-    && apt-get install -y --no-install-recommends lxc-docker-1.6.2
+# # Docker
+# RUN echo "deb https://download.docker.com/linux/debian stretch stable" \
+#         > /etc/apt/sources.list.d/docker.list \
+#     && curl -fsSL https://download.docker.com/linux/debian/gpg | apt-key add - \
+#     && apt-get update \
+#     && apt-get install -y --no-install-recommends docker-ce=17.03 \
+#     && apt-get -y autoremove && apt-get -y autoclean
+
+COPY tmux.conf /root/.tmux.conf
+
+COPY zshrc /root/.zshrc
 
 # Dotfiles
 RUN git clone https://github.com/ragnar-johannsson/dotfiles.git /tmp/dotfiles \
-    && cp /tmp/dotfiles/zshrc.symlink /root/.zshrc \
+    # && cp /tmp/dotfiles/zshrc.symlink /root/.zshrc \
     && cp /tmp/dotfiles/vimrc.symlink /root/.vimrc \
     && cp -r /tmp/dotfiles/zsh.symlink /root/.zsh  \
     && cp -r /tmp/dotfiles/vim.symlink /root/.vim  \
@@ -81,9 +111,12 @@ RUN git clone https://github.com/ragnar-johannsson/dotfiles.git /tmp/dotfiles \
     && sed -i 's/^" colorscheme /colorscheme /' /root/.vimrc \
     && sed -i "/'.*separator'/d" /root/.vimrc \
     && sed -i '/fzf/d; /^# GQ/d; /DEVMANAGEMENT/d' /root/.bashrc /root/.zshrc \
-    && echo 'ln -s /docker/docker.sock /var/run/docker.sock 2>/dev/null' >> /root/.zshrc \
+    # && echo 'ln -s /docker/docker.sock /var/run/docker.sock 2>/dev/null' >> /root/.zshrc \
     && touch /root/.z \
-    && rm -rf /tmp/dotfiles
+    #&& compaudit | xargs -I '%' chmod g-w,o-w '%' \
+    && rm ~/.zcompdump* \
+    && rm -rf /tmp/dotfiles 
+
 
 CMD ["/bin/zsh"]
 
