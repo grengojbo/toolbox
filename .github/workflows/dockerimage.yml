@@ -13,11 +13,13 @@ jobs:
     # https://github.com/marketplace/actions/publish-docker
     - name: Define variables
       run: |
-           echo "::set-env name=APP_RELEASE::cat RELEASE"
+           echo "::set-env name=APP_RELEASE::$(cat RELEASE)"
       shell: bash
-    - uses: elgohr/Publish-Docker-Github-Action@master
-      with:
-        name: ${{ github.repository }}
-        username: ${{ secrets.DOCKER_USERNAME }}
-        password: ${{ secrets.DOCKER_PASSWORD }}
-        tags: "latest,${{ env.APP_RELEASE }}"
+    - name: Publish to Registry ${{ APP_RELEASE }}
+      run: echo "-------- ${{ APP_RELEASE }} -----------"
+#     - uses: elgohr/Publish-Docker-Github-Action@master
+#       with:
+#         name: ${{ github.repository }}
+#         username: ${{ secrets.DOCKER_USERNAME }}
+#         password: ${{ secrets.DOCKER_PASSWORD }}
+#         tags: "latest,${{ env.APP_RELEASE }}"
