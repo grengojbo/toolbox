@@ -15,8 +15,8 @@ jobs:
       run: |
            echo "::set-env name=APP_RELEASE::$(cat RELEASE)"
       shell: bash
-    - name: Publish to Registry ${{ APP_RELEASE }}
-      run: echo "-------- ${{ APP_RELEASE }} -----------"
+    - name: Publish to Registry ${{ env.APP_RELEASE }}
+      run: echo "-------- ${{ env.APP_RELEASE }} -----------"
 #     - uses: elgohr/Publish-Docker-Github-Action@master
 #       with:
 #         name: ${{ github.repository }}
