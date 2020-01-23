@@ -1,5 +1,5 @@
 FROM debian:stretch-slim
-MAINTAINER Oleg Dolya <oleg.dolya@gmail.com>
+LABEL authors="Oleg Dolya <oleg.dolya@gmail.com>"
 
 RUN sed -i 's/$/ contrib non-free/' /etc/apt/sources.list && apt-get update
 
