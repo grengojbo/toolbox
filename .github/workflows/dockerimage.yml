@@ -13,9 +13,7 @@ jobs:
     # https://github.com/marketplace/actions/publish-docker
     - uses: elgohr/Publish-Docker-Github-Action@master
       with:
-        name: ${{ secrets.DOCKER_USERNAME }}/${{ GITHUB_REPOSITORY }}
+        name: ${{ secrets.DOCKER_USERNAME }}/toolbox
         username: ${{ secrets.DOCKER_USERNAME }}
         password: ${{ secrets.DOCKER_PASSWORD }}
         tags: "latest,$(cat RELEASE)"
-    #- name: Build the Docker image TAG = $(cat RELEASE)
-    #  run: docker build . --file Dockerfile --tag grengojbo/toolbox:$(cat RELEASE)
