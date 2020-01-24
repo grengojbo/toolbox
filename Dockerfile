@@ -1,3 +1,8 @@
+FROM yandex/clickhouse-client as clickhouse
+
+LABEL authors="Oleg Dolya <oleg.dolya@gmail.com>"
+
+
 FROM debian:stretch-slim
 LABEL authors="Oleg Dolya <oleg.dolya@gmail.com>"
 
@@ -69,6 +74,7 @@ RUN apt-get install -y --no-install-recommends \
         dnstracer       \
         && apt-get -y autoremove && apt-get -y autoclean
 
+COPY --from=clickhouse /usr/bin/clickhouse-client /usr/bin/clickhouse-client
 # Sysdig
 # RUN curl -sS https://s3.amazonaws.com/download.draios.com/DRAIOS-GPG-KEY.public | apt-key add - \
 #     && curl -s http://download.draios.com/stable/deb/draios.list \
