@@ -51,7 +51,7 @@ push:
 	docker push $(REPO_URL)/$(PROJECT_NAME):$(TAG)
 
 pull:
-	docker pull $(REPO_URL)/$(PROJECT_NAME):$(TAG
+	docker pull $(REPO_URL)/$(PROJECT_NAME):${TAG}
 
 build:
 	docker build --tag=$(REPO_URL)/$(PROJECT_NAME):$(TAG) .

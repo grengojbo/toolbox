@@ -4,6 +4,15 @@
   - clickhouse-client
   - postgresql-client
 
+
+## Example
+
+Connection to AWR RDS PostgreSQL
+
+```shell
+psql --port=5432 --username=postgres --password --host=<DB instance endpoint>
+```
+
 A CoreOS toolbox container based on Debian Jessie, with some niceties such as zsh and a fully fledged vim. To use, instruct the toolbox utility to use `ragnarb/toolbox` instead of the default Fedora container.
 
 See the [Docker Hub](https://registry.hub.docker.com/u/ragnarb/toolbox/) entry for this container.
