@@ -50,11 +50,14 @@ clean:
 push:
 	docker push $(REPO_URL)/$(PROJECT_NAME):$(TAG)
 
+pull:
+	docker pull $(REPO_URL)/$(PROJECT_NAME):$(TAG
+
 build:
 	docker build --tag=$(REPO_URL)/$(PROJECT_NAME):$(TAG) .
 
 # Attach a root terminal to an already running dev shell
-shell:
+shell: pull
 	docker run -it --rm $(REPO_URL)/$(PROJECT_NAME):$(TAG) zsh
 
 version:

@@ -75,6 +75,13 @@ RUN apt-get install -y --no-install-recommends \
         && apt-get -y autoremove && apt-get -y autoclean
 
 COPY --from=clickhouse /usr/bin/clickhouse-client /usr/bin/clickhouse-client
+
+RUN wget -q https://www.postgresql.org/media/keys/ACCC4CF8.asc -O - | sudo apt-key add - \
+  && echo "deb http://apt.postgresql.org/pub/repos/apt/ stretch-pgdg main" >> /etc/apt/sources.list.d/pgdg.list \
+  && apt-get update -y \
+  && apt-get install -y postgresql-client \
+  && apt-get -y autoremove && apt-get -y autoclean
+
 # Sysdig
 # RUN curl -sS https://s3.amazonaws.com/download.draios.com/DRAIOS-GPG-KEY.public | apt-key add - \
 #     && curl -s http://download.draios.com/stable/deb/draios.list \

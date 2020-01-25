@@ -2,6 +2,7 @@
 
  
   - clickhouse-client
+  - postgresql-client
 
 A CoreOS toolbox container based on Debian Jessie, with some niceties such as zsh and a fully fledged vim. To use, instruct the toolbox utility to use `ragnarb/toolbox` instead of the default Fedora container.
 
