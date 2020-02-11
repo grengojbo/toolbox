@@ -83,6 +83,13 @@ RUN wget -q https://www.postgresql.org/media/keys/ACCC4CF8.asc -O - | apt-key ad
   && apt-get install -y postgresql-client \
   && apt-get -y autoremove && apt-get -y autoclean
 
+RUN apt-get install -y --no-install-recommends \
+        mysql-client && apt-get -y autoremove && apt-get -y autoclean
+        
+#RUN curl https://packages.microsoft.com/keys/microsoft.asc | apt-key add - \
+#  && apt-get update -y \
+#  && apt-get install -y --no-install-recommends \
+  
 # Sysdig
 # RUN curl -sS https://s3.amazonaws.com/download.draios.com/DRAIOS-GPG-KEY.public | apt-key add - \
 #     && curl -s http://download.draios.com/stable/deb/draios.list \
