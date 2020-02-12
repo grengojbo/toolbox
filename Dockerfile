@@ -72,7 +72,7 @@ RUN apt-get install -y --no-install-recommends \
         dnsutils        \
         dnstop          \
         dnstracer       \
-        iputils-pin     \
+        iputils-ping    \
         && apt-get -y autoremove && apt-get -y autoclean
 
 COPY --from=clickhouse /usr/bin/clickhouse-client /usr/bin/clickhouse-client
